@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiefer's Palace</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="game-wrapper">
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- HUD overlay -->
+        <div id="hud">
+            <div id="chips-display">
+                <div class="chip-icon"></div>
+                <span id="chips-amount">$1,000</span>
+            </div>
+            <div id="table-info" class="hidden">
+                <span id="table-name-hud"></span>
+            </div>
+            <div id="hud-meta">
+                <span id="achievement-hud" title="Achievements unlocked">🏆 0</span>
+                <button type="button" id="btn-mute" title="Sound">🔊</button>
+            </div>
+        </div>
+
+        <!-- Buy-in modal -->
+        <div id="buyin-modal" class="modal hidden">
+            <div class="modal-box">
+                <h2 id="buyin-title">Sit Down?</h2>
+                <p id="buyin-desc"></p>
+                <div class="modal-buttons">
+                    <button id="buyin-confirm" class="btn-gold">Sit Down</button>
+                    <button id="buyin-cancel" class="btn-outline">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bust modal -->
+        <div id="bust-modal" class="modal hidden">
+            <div class="modal-box">
+                <h2>Broke!</h2>
+                <p>You've run out of chips. The casino is giving you a $500 loan to keep playing.</p>
+                <button id="bust-ok" class="btn-gold">Thanks, I'll win it back!</button>
+            </div>
+        </div>
+
+        <!-- Leave table button (shown during game) -->
+        <button id="leave-btn" class="hidden">← Leave Table</button>
+
+        <!-- Coach panel -->
+        <div id="coach-panel" class="hidden">
+            <div id="coach-header">
+                <span>🎓 Coach</span>
+                <button id="coach-close">✕</button>
+            </div>
+            <div id="coach-content">
+                <p id="coach-advice"></p>
+                <div id="coach-tips"></div>
+            </div>
+        </div>
+        <button id="coach-btn" class="hidden">🎓 Coach</button>
+
+        <!-- Game result flash -->
+        <div id="result-flash" class="hidden"></div>
+
+        <!-- Emoji reaction bar -->
+        <div id="emoji-bar" class="hidden">
+            <button class="emoji-btn" data-emoji="😎">😎</button>
+            <button class="emoji-btn" data-emoji="🔥">🔥</button>
+            <button class="emoji-btn" data-emoji="😤">😤</button>
+            <button class="emoji-btn" data-emoji="😂">😂</button>
+            <button class="emoji-btn" data-emoji="💰">💰</button>
+            <button class="emoji-btn" data-emoji="👏">👏</button>
+            <button class="emoji-btn" data-emoji="🤯">🤯</button>
+            <button class="emoji-btn" data-emoji="💀">💀</button>
+        </div>
+
+        <!-- Showdown: show or muck hole cards -->
+        <div id="showdown-bar" class="hidden">
+            <span id="showdown-prompt">Show or muck?</span>
+            <button type="button" id="btn-show-cards" class="btn-gold">Show</button>
+            <button type="button" id="btn-muck-cards" class="btn-outline">Muck</button>
+        </div>
+
+        <!-- Recent hands (scrollable) -->
+        <div id="hand-history-strip">
+            <div id="hand-history-label">Recent hands</div>
+            <div id="hand-history-body"></div>
+        </div>
+    </div>
+
+    <!-- Scripts - order matters -->
+    <script src="js/constants.js"></script>
+    <script src="js/save.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/potMath.js"></script>
+    <script src="js/cards.js"></script>
+    <script src="js/ai.js"></script>
+    <script src="js/coach.js"></script>
+    <script src="js/wardrobe.js"></script>
+    <script src="js/casino.js"></script>
+    <script src="js/sounds.js"></script>
+    <script src="js/blackjack.js"></script>
+    <script src="js/solitaire.js"></script>
+    <script src="js/tableGame.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
