@@ -21,7 +21,7 @@ class PokerGame {
         // AI
         const names = AIPlayer.pickNames(tableCfg.numAI);
         this.aiPlayers = names.map((name, i) =>
-            new AIPlayer(i, tableCfg.difficulty, tableCfg.buyIn * 4, name));
+            new AIPlayer(i, tableCfg.difficulty, tableCfg.buyIn, name));
         for (const ai of this.aiPlayers) {
             ai.seatColors = this._aiColors(ai.name);
         }
@@ -147,7 +147,7 @@ class PokerGame {
 
         for (const ai of this.aiPlayers) {
             ai.reset();
-            if (ai.chips <= 0) ai.chips = this.cfg.buyIn * 3;
+            if (ai.chips <= 0) ai.chips = this.cfg.buyIn;
         }
 
         const n = this._numSeats();

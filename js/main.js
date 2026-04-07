@@ -473,7 +473,8 @@ const Game = {
         this.state = C.STATE.BUYIN;
 
         const theme = C.THEMES[tableCfg.theme];
-        const canAfford = this.playerChips >= tableCfg.buyIn;
+        const minBuyIn = tableCfg.minBet || 10;
+        const canAfford = this.playerChips >= minBuyIn;
 
         const typeLabels = {
             holdem: "Texas Hold'em",
@@ -484,17 +485,30 @@ const Game = {
 
         document.getElementById('buyin-title').textContent = theme.name;
 
+        const sliderRow = document.getElementById('buyin-slider-row');
+        const slider = document.getElementById('buyin-slider');
+        const sliderVal = document.getElementById('buyin-slider-val');
+
         let descHTML = `<strong>${type}</strong><br>`;
         if (tableCfg.type === 'holdem') {
             const diff = tableCfg.difficulty.charAt(0).toUpperCase() + tableCfg.difficulty.slice(1);
             descHTML += `${diff}<br>`;
             descHTML += `Buy-in: <strong>$${tableCfg.buyIn}</strong> &nbsp;&middot;&nbsp; Blinds: $${tableCfg.smallBlind}/$${tableCfg.bigBlind}<br>`;
+            sliderRow.style.display = 'none';
         } else if (tableCfg.type === 'blackjack') {
-            descHTML += `Buy-in: <strong>$${tableCfg.buyIn}</strong><br>`;
             descHTML += `Bet range: $${tableCfg.minBet}&ndash;$${tableCfg.maxBet} &nbsp;&middot;&nbsp; Blackjack pays 3:2<br>`;
+            // Show buy-in slider for blackjack
+            sliderRow.style.display = 'block';
+            slider.min = minBuyIn;
+            slider.max = this.playerChips;
+            slider.value = Math.min(tableCfg.buyIn, this.playerChips);
+            slider.step = minBuyIn;
+            sliderVal.textContent = '$' + slider.value;
+            slider.oninput = () => { sliderVal.textContent = '$' + slider.value; };
         } else if (tableCfg.type === 'solitaire') {
             descHTML += `Cost: <strong>$${tableCfg.buyIn}</strong> per game<br>`;
             descHTML += `Earn $5 for each card placed on foundations<br>`;
+            sliderRow.style.display = 'none';
         }
         descHTML += `<br>Your chips: <strong>$${this.playerChips}</strong>`;
         if (!canAfford) descHTML += '<br><span style="color:#f66">\u26A0 Not enough chips!</span>';
@@ -512,7 +526,15 @@ const Game = {
         document.getElementById('buyin-modal').classList.add('hidden');
         if (!this.pendingTable) return;
 
-        const buyIn = this.pendingTable.buyIn;
+        let buyIn;
+        if (this.pendingTable.type === 'blackjack') {
+            // Use slider value for blackjack
+            const slider = document.getElementById('buyin-slider');
+            buyIn = Math.max(1, Math.min(parseInt(slider.value) || this.pendingTable.buyIn, this.playerChips));
+        } else {
+            buyIn = this.pendingTable.buyIn;
+        }
+        this._currentBuyIn = buyIn; // store for leave table
         this.playerChips -= buyIn;
 
         try {
@@ -543,7 +565,7 @@ const Game = {
         if (this.pokerGame) {
             // Record session stats before leaving
             const chipsOut = Math.max(0, this.pokerGame.playerChips); // never negative
-            const buyIn = this.pendingTable ? this.pendingTable.buyIn : 0;
+            const buyIn = this._currentBuyIn || (this.pendingTable ? this.pendingTable.buyIn : 0);
             const net = chipsOut - buyIn;
             const gameType = this.pendingTable ? this.pendingTable.type : 'holdem';
             KieferSave.recordSession(gameType, net);

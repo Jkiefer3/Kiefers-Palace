@@ -30,6 +30,11 @@
             <div class="modal-box">
                 <h2 id="buyin-title">Sit Down?</h2>
                 <p id="buyin-desc"></p>
+                <div id="buyin-slider-row" style="display:none; margin:12px 0; text-align:center;">
+                    <label style="color:#ffe9a8; font-size:13px;">Buy-in: <strong id="buyin-slider-val">$100</strong></label><br>
+                    <input type="range" id="buyin-slider" min="10" max="1000" value="100"
+                        style="width:80%; margin-top:6px; accent-color:#d4af37;">
+                </div>
                 <div class="modal-buttons">
                     <button id="buyin-confirm" class="btn-gold">Sit Down</button>
                     <button id="buyin-cancel" class="btn-outline">Cancel</button>
