@@ -542,7 +542,7 @@ const Game = {
     _leaveTable() {
         if (this.pokerGame) {
             // Record session stats before leaving
-            const chipsOut = this.pokerGame.playerChips;
+            const chipsOut = Math.max(0, this.pokerGame.playerChips); // never negative
             const buyIn = this.pendingTable ? this.pendingTable.buyIn : 0;
             const net = chipsOut - buyIn;
             const gameType = this.pendingTable ? this.pendingTable.type : 'holdem';

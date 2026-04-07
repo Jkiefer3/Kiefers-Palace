@@ -189,6 +189,7 @@ class PokerGame {
         const seatPos = this.seats[seat];
         if (seat === 0) {
             this.playerChips -= pay;
+            if (this.playerChips < 0) this.playerChips = 0; // safety floor
             this.playerBet += pay;
             this.playerInvestedThisHand += pay;
             this.pot += pay;
@@ -417,8 +418,10 @@ class PokerGame {
 
     playerCall() {
         if (this.state !== 'player_action') return;
-        const amount = Math.min(this.currentBet - this.playerBet, this.playerChips);
+        const amount = Math.max(0, Math.min(this.currentBet - this.playerBet, this.playerChips));
+        if (amount <= 0 && this.playerChips <= 0) return; // no chips left
         this.playerChips -= amount;
+        if (this.playerChips < 0) this.playerChips = 0; // safety floor
         this.playerBet   += amount;
         this.playerInvestedThisHand += amount;
         this.pot         += amount;
@@ -432,9 +435,11 @@ class PokerGame {
 
     playerRaise(amount) {
         if (this.state !== 'player_action') return;
-        const callFirst = this.currentBet - this.playerBet;
-        const total     = Math.min(callFirst + amount, this.playerChips);
+        if (this.playerChips <= 0) return; // no chips left
+        const callFirst = Math.max(0, this.currentBet - this.playerBet);
+        const total     = Math.max(0, Math.min(callFirst + amount, this.playerChips));
         this.playerChips -= total;
+        if (this.playerChips < 0) this.playerChips = 0; // safety floor
         this.playerBet   += total;
         this.playerInvestedThisHand += total;
         this.pot         += total;

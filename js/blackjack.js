@@ -198,7 +198,9 @@ class BlackjackGame {
     _dealInitial() {
         this.playerHand = [];
         this.dealerHand = [];
+        this.currentBet = Math.min(this.currentBet, this.playerChips); // never bet more than you have
         this.playerChips -= this.currentBet;
+        if (this.playerChips < 0) this.playerChips = 0; // safety floor
         this.doubledDown = false;
         this.resultText = '';
         this.resultAmount = 0;
@@ -280,8 +282,10 @@ class BlackjackGame {
         if (this.playerHand.length !== 2) return;
         if (this.playerChips < this.currentBet) return;
 
-        this.playerChips -= this.currentBet;
-        this.currentBet *= 2;
+        const doubleAmount = Math.min(this.currentBet, this.playerChips);
+        this.playerChips -= doubleAmount;
+        if (this.playerChips < 0) this.playerChips = 0; // safety floor
+        this.currentBet += doubleAmount;
         this.doubledDown = true;
 
         const card = this._draw(true);
